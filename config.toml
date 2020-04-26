@@ -1,13 +1,21 @@
 baseURL = "https://covid-19.starinc.xyz"
 languageCode = "zh-tw"
 title = "COVID-19 - Star Inc."
-
-contentdir    = "content"
-layoutdir     = "layouts"
-publishdir    = "public"
-canonifyurls  = true
-
+contentdir = "content"
+layoutdir = "layouts"
+publishdir = "public"
+canonifyurls = true
 theme = "syna"
 metaDataFormat = "yaml"
 pygmentsUseClasses = true
 pygmentCodeFences = true
+
+[[menu.main]]
+url = "/"
+name = "首頁"
+weight = 10
+
+[[menu.main]]
+url = "/about"
+name = "關於本站"
+weight = 20

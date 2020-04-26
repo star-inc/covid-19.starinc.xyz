@@ -17,5 +17,3 @@ menu_title = "祈福。"
 [關於 嚴重特殊傳染性肺炎](http://at.cdc.tw/xP90P0)
 
 [#TaiwanCanHelp](https://taiwancanhelp.us/)
-
-[關於本站](/about)
