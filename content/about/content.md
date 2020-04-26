@@ -5,7 +5,7 @@ weight = 100
 title = "關於本站"
 +++
  
- ![logo](/images/banner.png)
+ ![logo](/favicon.svg)
 
 這是公益網站。
 
@@ -13,9 +13,7 @@ title = "關於本站"
 
 基礎原始碼則以[MIT 條款](https://gitlab.com/star-inc/covid-19/-/blob/master/LICENSE)釋出。
 
-### 我們是誰
-
-[Star Inc.](https://starinc.xyz) 是來自亞洲的一家網際網路內容提供商（ICP），
+[Star Inc.](https://starinc.xyz) 是來自亞洲的一家網際網路內容提供商（ICP）。
 
 我們希望能在這次災難中盡一份心力。
 
