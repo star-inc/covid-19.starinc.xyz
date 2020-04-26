@@ -1,0 +1,27 @@
+{{- $fragment := .self.Params -}}
+{{- $name := strings.TrimSuffix ".md" (replace .self.Name "/index.md" "") -}}
+{{- $bg := $fragment.background | default "secondary" }}
+<section id="{{ $name }}">
+    <div class="overlay container-fluid
+    {{- printf " bg-%s" $bg -}}
+  ">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col text-center
+        {{- if eq $bg "dark" -}}
+          {{- printf " text-%s" "light" -}}
+        {{- else -}}
+          {{- printf " text-%s" "dark" -}}
+        {{- end -}}
+      ">
+                    <h4>新型冠狀病毒</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <h5>COVID-19</h5>
+                    <p>保持社交距離。勤洗手、保持良好衛生習慣。防疫專線 <a href="tel:1922">請撥 1922</a>。</p>
+                </div>
+            </div>
+        </div>
+</section>
