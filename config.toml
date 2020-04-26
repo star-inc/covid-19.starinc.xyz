@@ -16,6 +16,11 @@ name = "首頁"
 weight = 10
 
 [[menu.main]]
+url = "/map"
+name = "即時圖表"
+weight = 20
+
+[[menu.main]]
 url = "/about"
 name = "關於本站"
 weight = 20

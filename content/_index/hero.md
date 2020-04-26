@@ -23,7 +23,7 @@ subtitle = "這是一場浩劫"
 
 [[buttons]]
   text = "即時圖表"
-  url = "#"
+  url = "/map"
   color = "warning"
 
 [[buttons]]
