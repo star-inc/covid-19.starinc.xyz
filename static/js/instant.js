@@ -8,6 +8,10 @@ $(function () {
         attribution: '<a href="https://www.openstreetmap.org/">OSM</a>',
         maxZoom: 18,
     }).addTo(map);
+
+    function format(country_name, confirmed, recovered, deaths) {
+        return "<tr><th scope=\"row\">" + country_name + "</th><td>" + confirmed + "</td><td>" + recovered + "</td><td>" + deaths + "</td></tr>";
+    }
     let data_url = "https://pomber.github.io/covid19/timeseries.json";
     let data2_url = "https://gist.githubusercontent.com/supersonictw/86038eb5cda33229d6367e4f7499e066/raw/63ee5e0afc74fe3542d7155d4201ce0d9046b14e/countries.json";
     $.getJSON(data_url, function (xhr) {
@@ -18,12 +22,12 @@ $(function () {
                 var showed = false;
                 country_names.forEach(function (country) {
                     if (country.English.trim() === name) {
-                        $("#data").append(country.Taiwan + " " + xhr[e][date].confirmed + "<br>");
+                        $("#data").append(format(country.Taiwan, xhr[e][date].confirmed, xhr[e][date].recovered, xhr[e][date].deaths));
                         showed = true;
                     }
                 });
                 if (!showed) {
-                    $("#data").append(e + " " + xhr[e][date].confirmed + "<br>");
+                    $("#data").append(format(e, xhr[e][date].confirmed, xhr[e][date].recovered, xhr[e][date].deaths));
                 }
             });
         });
