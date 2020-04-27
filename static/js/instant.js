@@ -5,8 +5,8 @@ let map = L.map('map');
 var init_location = [23.730, 120.890];
 let locate_url = "https://gist.githubusercontent.com/erdem/8c7d26765831d0f9a8c62f02782ae00d/raw/248037cd701af0a4957cce340dabb0fd04e38f4c/countries.json";
 
-function setmap() {
-    map.setView(init_location, 3);
+function setmap(location) {
+    map.setView(location, 3);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '<a href="https://www.openstreetmap.org/">OSM</a>',
         maxZoom: 18,
@@ -17,12 +17,11 @@ function locale(country_name) {
     map.eachLayer(function (layer) {
         map.removeLayer(layer)
     });
-    setmap();
     $.getJSON(locate_url, function (xhr) {
         xhr.forEach(function (country) {
             if (country.name == country_name) {
                 let map_location = country.latlng;
-                map.setView(map_location, 3);
+                setmap(map_location);
                 L.marker(map_location).addTo(map);
             }
         });
@@ -30,7 +29,7 @@ function locale(country_name) {
 }
 
 $(function () {
-    setmap();
+    setmap(init_location);
 
     let data_url = "https://pomber.github.io/covid19/timeseries.json";
     let data2_url = "https://gist.githubusercontent.com/supersonictw/86038eb5cda33229d6367e4f7499e066/raw/63ee5e0afc74fe3542d7155d4201ce0d9046b14e/countries.json";
