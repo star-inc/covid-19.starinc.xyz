@@ -1,7 +1,8 @@
 /*jshint esversion: 6 */
 
 $(function () {
-    let map = L.map('map').setView([-25.363, 131.044], 5);
+    var init_location = [23.730, 120.890];
+    let map = L.map('map').setView(init_location, 7);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '<a href="https://www.openstreetmap.org/">OSM</a>',
         maxZoom: 18,
