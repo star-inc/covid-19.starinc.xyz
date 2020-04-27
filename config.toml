@@ -21,6 +21,11 @@ name = "即時圖表"
 weight = 20
 
 [[menu.main]]
+url = "/maskmap"
+name = "口罩地圖"
+weight = 20
+
+[[menu.main]]
 url = "/about"
 name = "關於本站"
 weight = 20
