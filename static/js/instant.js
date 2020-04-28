@@ -5,8 +5,7 @@ let map = L.map('map');
 const init_location = [23.730, 120.890];
 const origin_container = $("#countries").clone();
 const data_url = "https://pomber.github.io/covid19/timeseries.json";
-const data2_url = "https://gist.githubusercontent.com/supersonictw/86038eb5cda33229d6367e4f7499e066/raw/63ee5e0afc74fe3542d7155d4201ce0d9046b14e/countries.json";
-const locate_url = "https://gist.githubusercontent.com/erdem/8c7d26765831d0f9a8c62f02782ae00d/raw/248037cd701af0a4957cce340dabb0fd04e38f4c/countries.json";
+const data2_url = "https://gist.githubusercontent.com/supersonictw/86038eb5cda33229d6367e4f7499e066/raw/4acd9bc2bb5c1e700ebb56bc2874a3114b25fbdf/countries.json";
 
 function setmap(location) {
     map.setView(location, 3);
@@ -68,19 +67,19 @@ function locale(country_name) {
         setmap(init_location);
         $("#countries").html(origin_container);
     } else {
-        $.getJSON(locate_url, function (xhr) {
-            xhr.forEach(function (country) {
-                if (country.name == country_name) {
-                    let map_location = country.latlng;
+        $.getJSON(data2_url, function (xhr) {
+            Object.keys(xhr).forEach(function (country) {
+                if (country == country_name) {
+                    let map_location = country.location;
                     setmap(map_location);
                     L.marker(map_location).addTo(map);
                 }
             });
         });
         $.getJSON(data2_url, function (country_names) {
-            country_names.forEach(function (e) {
-                if (e.English.trim() == country_name) {
-                    $("#countries").html(format(e.Taiwan, country_name));
+            Object.keys(country_names).forEach(function (e) {
+                if (e == country_name) {
+                    $("#countries").html(format(country_names[e].zh_TW, country_name));
                 }
             });
         });
@@ -130,15 +129,10 @@ $(function () {
                 Object.keys(xhr).forEach(function (e) {
                     let latest = xhr[e].length - 1;
                     let name = (e === "Taiwan*") ? "Taiwan" : e;
-                    let showed = false;
-                    country_names.forEach(function (country) {
-                        if (country.English.trim() === name) {
-                            $("#data").append(format(e, country.Taiwan, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
-                            showed = true;
-                        }
-                    });
-                    if (!showed) {
-                        $("#data").append(format(e, e, xhr[e][date].confirmed, xhr[e][date].recovered, xhr[e][date].deaths));
+                    if (country_names[name].zh_TW !== undefined) {
+                        $("#data").append(format(e, country_names[name].zh_TW, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
+                    } else {
+                        $("#data").append(format(e, name, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
                     }
                 });
             });
