@@ -2,11 +2,11 @@
 // (c) 2020 Star Inc.
 
 let map = L.map('map');
-let init_location = [23.730, 120.890];
-let origin_container = $("#countries").clone();
-let data_url = "https://pomber.github.io/covid19/timeseries.json";
-let data2_url = "https://gist.githubusercontent.com/supersonictw/86038eb5cda33229d6367e4f7499e066/raw/63ee5e0afc74fe3542d7155d4201ce0d9046b14e/countries.json";
-let locate_url = "https://gist.githubusercontent.com/erdem/8c7d26765831d0f9a8c62f02782ae00d/raw/248037cd701af0a4957cce340dabb0fd04e38f4c/countries.json";
+const init_location = [23.730, 120.890];
+const origin_container = $("#countries").clone();
+const data_url = "https://pomber.github.io/covid19/timeseries.json";
+const data2_url = "https://gist.githubusercontent.com/supersonictw/86038eb5cda33229d6367e4f7499e066/raw/63ee5e0afc74fe3542d7155d4201ce0d9046b14e/countries.json";
+const locate_url = "https://gist.githubusercontent.com/erdem/8c7d26765831d0f9a8c62f02782ae00d/raw/248037cd701af0a4957cce340dabb0fd04e38f4c/countries.json";
 
 function setmap(location) {
     map.setView(location, 3);
@@ -16,8 +16,32 @@ function setmap(location) {
     }).addTo(map);
 }
 
+function chart(labels, data) {
+    let ctx = document.getElementById('chart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '# of Case',
+                data: data,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
 function format(origin_name, country_name) {
-    return "<h4>" + origin_name + "</h4><p>" + country_name + "</p><div class=\"data-container\"></div><a href=\"javascript:locale('global')\">返回</a>";
+    return "<h4>" + origin_name + "</h4><p>" + country_name + "</p><div class=\"data-container\"><canvas id=\"chart\" width=\"100%\" height=\"50px\"></canvas></div><a href=\"javascript:locale('global')\">返回</a>";
 }
 
 function locale(country_name) {
@@ -44,6 +68,16 @@ function locale(country_name) {
                 }
             });
         });
+        setTimeout(function () {
+            $.getJSON(data_url, function (xhr) {
+                let data = [];
+                let total = xhr[country_name].length;
+                for (let i = 50; i < total; i++) {
+                    data.push(xhr[country_name][i].confirmed);
+                }
+                chart(Object.keys(data), data);
+            });
+        }, 300);
     }
 }
 
@@ -61,13 +95,13 @@ $(function () {
             }
             return i;
         }
-        var NowDate = new Date();
-        var y = NowDate.getFullYear();
-        var M = NowDate.getMonth() + 1;
-        var d = NowDate.getDate();
-        var h = NowDate.getHours();
-        var m = NowDate.getMinutes();
-        var s = NowDate.getSeconds();
+        let now = new Date();
+        let y = now.getFullYear();
+        let M = now.getMonth() + 1;
+        let d = now.getDate();
+        let h = now.getHours();
+        let m = now.getMinutes();
+        let s = now.getSeconds();
         return '最後重新整理：' + y + "-" + carry(M) + "-" + carry(d) + " " + carry(h) + ":" + carry(m) + ":" + carry(s);
     }
 
@@ -75,9 +109,9 @@ $(function () {
         $.getJSON(data_url, function (xhr) {
             $.getJSON(data2_url, function (country_names) {
                 Object.keys(xhr).forEach(function (e) {
-                    var date = Math.max(...Object.keys(xhr[e]));
-                    var name = (e === "Taiwan*") ? "Taiwan" : e;
-                    var showed = false;
+                    let date = Math.max(...Object.keys(xhr[e]));
+                    let name = (e === "Taiwan*") ? "Taiwan" : e;
+                    let showed = false;
                     country_names.forEach(function (country) {
                         if (country.English.trim() === name) {
                             $("#data").append(format(e, country.Taiwan, xhr[e][date].confirmed, xhr[e][date].recovered, xhr[e][date].deaths));
