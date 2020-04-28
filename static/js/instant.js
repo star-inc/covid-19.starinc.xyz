@@ -68,20 +68,10 @@ function locale(country_name) {
         $("#countries").html(origin_container);
     } else {
         $.getJSON(data2_url, function (xhr) {
-            Object.keys(xhr).forEach(function (country) {
-                if (country == country_name) {
-                    let map_location = country.location;
-                    setmap(map_location);
-                    L.marker(map_location).addTo(map);
-                }
-            });
-        });
-        $.getJSON(data2_url, function (country_names) {
-            Object.keys(country_names).forEach(function (e) {
-                if (e == country_name) {
-                    $("#countries").html(format(country_names[e].zh_TW, country_name));
-                }
-            });
+            let map_location = xhr[country_name].location;
+            setmap(map_location);
+            L.marker(map_location).addTo(map);
+            $("#countries").html(format(xhr[country_name].zh_TW, country_name));
         });
         setTimeout(function () {
             $.getJSON(data_url, function (xhr) {
@@ -124,15 +114,15 @@ $(function () {
     }
 
     function update() {
+        $("#data").html("");
         $.getJSON(data_url, function (xhr) {
             $.getJSON(data2_url, function (country_names) {
                 Object.keys(xhr).forEach(function (e) {
                     let latest = xhr[e].length - 1;
-                    let name = (e === "Taiwan*") ? "Taiwan" : e;
-                    if (country_names[name].zh_TW !== undefined) {
-                        $("#data").append(format(e, country_names[name].zh_TW, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
+                    if (country_names[e].hasOwnProperty("zh_TW")) {
+                        $("#data").append(format(e, country_names[e].zh_TW, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
                     } else {
-                        $("#data").append(format(e, name, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
+                        $("#data").append(format(e, e, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
                     }
                 });
             });
@@ -141,5 +131,5 @@ $(function () {
     }
 
     update();
-    setInterval(update, 3000);
+    setInterval(update, 35000);
 });
