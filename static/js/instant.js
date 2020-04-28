@@ -5,7 +5,7 @@ let map = L.map('map');
 const init_location = [23.730, 120.890];
 const origin_container = $("#countries").clone();
 const data_url = "https://pomber.github.io/covid19/timeseries.json";
-const data2_url = "https://gist.githubusercontent.com/supersonictw/86038eb5cda33229d6367e4f7499e066/raw/4acd9bc2bb5c1e700ebb56bc2874a3114b25fbdf/countries.json";
+const data2_url = "https://gist.githubusercontent.com/supersonictw/86038eb5cda33229d6367e4f7499e066/raw/85394d1b03a2f6d9ca985693be4cadf0d99a6d25/countries.json";
 
 function setmap(location) {
     map.setView(location, 3);
