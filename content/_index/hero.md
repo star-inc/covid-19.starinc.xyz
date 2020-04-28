@@ -17,17 +17,17 @@ subtitle = "這是一場浩劫"
   height = "250px"
 
 [[buttons]]
-  text = "什麼是 COVID-19 ？"
-  url = "http://at.cdc.tw/xP90P0"
-  color = "primary"
-
-[[buttons]]
   text = "即時圖表"
   url = "/map"
   color = "warning"
 
 [[buttons]]
-  text = "Star Inc. 做了什麼？"
-  url = "#"
+  text = "什麼是 COVID-19 ？"
+  url = "http://at.cdc.tw/xP90P0"
+  color = "primary"
+
+[[buttons]]
+  text = "口罩地圖"
+  url = "/maskmap"
   color = "success"
 +++
