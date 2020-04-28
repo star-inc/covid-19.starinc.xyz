@@ -23,30 +23,21 @@ function chart(labels, data) {
         data: {
             labels: labels,
             datasets: [{
-                label: '# of Case',
+                label: '# of Cases',
                 data: data,
-                borderWidth: 1
+                borderColor: 'rgba(65, 133, 255, 0.5)'
             }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
         }
     });
 }
 
 function format(origin_name, country_name) {
-    return "<h4>" + origin_name + "</h4><p>" + country_name + "</p><div class=\"data-container\"><canvas id=\"chart\" width=\"100%\" height=\"50px\"></canvas></div><a href=\"javascript:locale('global')\">返回</a>";
+    return "<h4>" + origin_name + "</h4><p>" + country_name + "</p><div class=\"data-container\"><div id=\"data-date\"></div><canvas id=\"chart\" width=\"100%\" height=\"60px\"></canvas></div><a href=\"javascript:locale('global')\">返回</a>";
 }
 
 function locale(country_name) {
     map.eachLayer(function (layer) {
-        map.removeLayer(layer)
+        map.removeLayer(layer);
     });
     if (country_name === "global") {
         setmap(init_location);
@@ -71,10 +62,12 @@ function locale(country_name) {
         setTimeout(function () {
             $.getJSON(data_url, function (xhr) {
                 let data = [];
+                let init = 50;
                 let total = xhr[country_name].length;
-                for (let i = 50; i < total; i++) {
+                for (let i = init; i < total; i++) {
                     data.push(xhr[country_name][i].confirmed);
                 }
+                $("#data-date").text("From " + xhr[country_name][init].date + " to " + xhr[country_name][total - 1].date);
                 chart(Object.keys(data), data);
             });
         }, 300);
@@ -129,4 +122,4 @@ $(function () {
 
     update();
     setInterval(update, 3000);
-})
+});
