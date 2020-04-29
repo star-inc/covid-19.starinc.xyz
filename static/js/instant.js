@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 8 */
 // (c) 2020 Star Inc.
 
 const init_location = [23.730, 120.890];
@@ -34,10 +34,10 @@ analysis.prototype = {
         };
     },
 
-    total_add: function (confirmed, recovered, deaths) {
-        this.total.confirmed += confirmed;
-        this.total.recovered += recovered;
-        this.total.deaths += deaths;
+    total_add: function (data) {
+        this.total.confirmed += data.confirmed;
+        this.total.recovered += data.recovered;
+        this.total.deaths += data.deaths;
     },
 
     data_info: function (data) {
@@ -118,7 +118,7 @@ analysis.prototype = {
             self.setmap(init_location, 3);
             $("#countries").html(origin_container);
         } else {
-            format = function (origin_name, country_name) {
+            let format = function (origin_name, country_name) {
                 return "<h4>" + origin_name + "</h4>" +
                     "<p>" + country_name + "</p>" +
                     "<div class=\"data-container\">" +
@@ -128,13 +128,13 @@ analysis.prototype = {
                     "</div>" +
                     "<p><a href=\"javascript:context.locale('global');\">返回</a></p>";
             };
-            draw_map = function (target) {
+            let draw_map = function (target) {
                 let map_location = self.data2[target].location;
                 self.setmap(map_location, 5);
                 L.marker(map_location).addTo(self.map);
                 $("#countries").html(format(self.data2[target].zh_TW, target));
             };
-            draw_chart = function (init, target) {
+            let draw_chart = function (init, target) {
                 let confirmed = [];
                 let total = self.data[target].length;
                 for (let i = init; i < total; i++) {
@@ -152,7 +152,7 @@ analysis.prototype = {
     },
 
     time: function () {
-        carry = function (date, unit) {
+        let carry = function (date, unit) {
             unit.forEach(function (node) {
                 if (date[node] < 10) {
                     date[node] = "0" + date[node];
@@ -172,34 +172,38 @@ analysis.prototype = {
         return date.y + "-" + date.M + "-" + date.d + " " + date.h + ":" + date.m + ":" + date.s;
     },
 
-    update: function () {
-        let self = this;
-        self.total_reset();
+    display: function () {
+        let format = function (origin_name, country_name, item) {
+            return "<tr>" +
+                "<th scope=\"row\" onclick=\"context.locale('" + origin_name + "')\">" + country_name + "</th>" +
+                "<td>" + item.confirmed + "</td><td>" + item.recovered + "</td><td>" + item.deaths + "</td>" +
+                "</tr>";
+        };
+        for (let country in this.data) {
+            let latest = this.data[country].length - 1;
+            if (this.data2[country].hasOwnProperty("zh_TW")) {
+                $("#countries-data").append(format(country, this.data2[country].zh_TW, this.data[country][latest]));
+            } else {
+                $("#countries-data").append(format(country, country, this.data[country][latest]));
+            }
+            this.total_add(this.data[country][latest]);
+        }
+        $("#worldwide-data").html("<tr><td>" + this.total.confirmed + "</td><td>" + this.total.recovered + "</td><td>" + this.total.deaths + "</td></tr>");
+        this.chart3(this.total);
+        $("#lastupdate").text(this.time());
+    },
+
+    update: async function () {
+        this.total_reset();
         $("#countries-data").html("");
-        $.getJSON(data_url, function (xhr) {
-            $.getJSON(data2_url, function (country_names) {
-                format = function (origin_name, country_name, confirmed, recovered, deaths) {
-                    return "<tr>" +
-                        "<th scope=\"row\" onclick=\"context.locale('" + origin_name + "')\">" + country_name + "</th>" +
-                        "<td>" + confirmed + "</td><td>" + recovered + "</td><td>" + deaths + "</td>" +
-                        "</tr>";
-                };
-                Object.keys(xhr).forEach(function (e) {
-                    let latest = xhr[e].length - 1;
-                    if (country_names[e].hasOwnProperty("zh_TW")) {
-                        $("#countries-data").append(format(e, country_names[e].zh_TW, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
-                    } else {
-                        $("#countries-data").append(format(e, e, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
-                    }
-                    self.total_add(xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths);
-                });
-                self.data = xhr;
-                self.data2 = country_names;
-                $("#worldwide-data").html("<tr><td>" + self.total.confirmed + "</td><td>" + self.total.recovered + "</td><td>" + self.total.deaths + "</td></tr>");
-                self.chart3(self.total);
+        let download = async function (url) {
+            return new Promise(function (action) {
+                $.getJSON(url, action);
             });
-        });
-        $("#lastupdate").text(self.time());
+        };
+        this.data = await download(data_url);
+        this.data2 = await download(data2_url);
+        this.display();
     }
 }
 
