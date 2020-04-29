@@ -7,96 +7,93 @@ const origin_container = $("#countries").clone();
 const data_url = "https://pomber.github.io/covid19/timeseries.json";
 const data2_url = "https://gist.githubusercontent.com/supersonictw/86038eb5cda33229d6367e4f7499e066/raw/8442d13be6e531eb82407fdb5d1124255655a3d2/countries.json";
 
-function setmap(location) {
-    map.setView(location, 3);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '<a href="https://www.openstreetmap.org/">OSM</a>',
-        maxZoom: 18,
-    }).addTo(map);
+function analysis() {
+
 }
 
-function chart(labels, data) {
-    let ctx = document.getElementById('chart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: '# of Cases',
-                data: data,
-                borderColor: 'rgba(65, 133, 255, 0.5)'
-            }]
-        }
-    });
-}
+analysis.prototype = {
+    setmap: function (location) {
+        map.setView(location, 3);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '<a href="https://www.openstreetmap.org/">OSM</a>',
+            maxZoom: 18,
+        }).addTo(map);
+    },
 
-function chart2(data) {
-    let info = [(data.confirmed - data.recovered - data.deaths), data.recovered, data.deaths];
-    let ctx = document.getElementById('chart2').getContext('2d');
-    new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ["treating", "recovered", "deaths"],
-            datasets: [{
-                label: '% of Cases',
-                data: info,
-                borderColor: [
-                    'rgba(220, 0, 130, 0.5)',
-                    'rgba(15, 205, 25, 0.5)',
-                    'rgba(0, 0, 0, 0.5)'
-                ],
-                backgroundColor: [
-                    'rgba(220, 0, 130, 0.5)',
-                    'rgba(15, 205, 25, 0.5)',
-                    'rgba(0, 0, 0, 0.5)'
-                ]
-            }]
-        }
-    });
-}
-
-function format(origin_name, country_name) {
-    return "<h4>" + origin_name + "</h4><p>" + country_name + "</p><div class=\"data-container\"><div id=\"data-date\"></div><canvas id=\"chart\" width=\"100%\" height=\"60px\"></canvas><canvas id=\"chart2\" width=\"100%\" height=\"60px\"></canvas></div><p><a href=\"javascript:locale('global');\">返回</a></p>";
-}
-
-function locale(country_name) {
-    map.eachLayer(function (layer) {
-        map.removeLayer(layer);
-    });
-    if (country_name === "global") {
-        setmap(init_location);
-        $("#countries").html(origin_container);
-    } else {
-        $.getJSON(data2_url, function (xhr) {
-            let map_location = xhr[country_name].location;
-            setmap(map_location);
-            L.marker(map_location).addTo(map);
-            $("#countries").html(format(xhr[country_name].zh_TW, country_name));
+    chart: function (labels, data) {
+        let ctx = document.getElementById('chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '# of Cases',
+                    data: data,
+                    borderColor: 'rgba(65, 133, 255, 0.5)'
+                }]
+            }
         });
-        setTimeout(function () {
-            $.getJSON(data_url, function (xhr) {
-                let data = [];
-                let init = 50;
-                let total = xhr[country_name].length;
-                for (let i = init; i < total; i++) {
-                    data.push(xhr[country_name][i].confirmed);
-                }
-                $("#data-date").text("From " + xhr[country_name][init].date + " to " + xhr[country_name][total - 1].date);
-                chart(Object.keys(data), data);
-                chart2(xhr[country_name][total - 1]);
+    },
+
+    chart2: function (data) {
+        let info = [(data.confirmed - data.recovered - data.deaths), data.recovered, data.deaths];
+        let ctx = document.getElementById('chart2').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ["treating", "recovered", "deaths"],
+                datasets: [{
+                    label: '% of Cases',
+                    data: info,
+                    borderColor: [
+                        'rgba(220, 0, 130, 0.5)',
+                        'rgba(15, 205, 25, 0.5)',
+                        'rgba(0, 0, 0, 0.5)'
+                    ],
+                    backgroundColor: [
+                        'rgba(220, 0, 130, 0.5)',
+                        'rgba(15, 205, 25, 0.5)',
+                        'rgba(0, 0, 0, 0.5)'
+                    ]
+                }]
+            }
+        });
+    },
+
+    locale: function (country_name) {
+        map.eachLayer(function (layer) {
+            map.removeLayer(layer);
+        });
+        if (country_name === "global") {
+            this.setmap(init_location);
+            $("#countries").html(origin_container);
+        } else {
+            format = function (origin_name, country_name) {
+                return "<h4>" + origin_name + "</h4><p>" + country_name + "</p><div class=\"data-container\"><div id=\"data-date\"></div><canvas id=\"chart\" width=\"100%\" height=\"60px\"></canvas><canvas id=\"chart2\" width=\"100%\" height=\"60px\"></canvas></div><p><a href=\"javascript:context.locale('global');\">返回</a></p>";
+            };
+            $.getJSON(data2_url, function (xhr) {
+                let map_location = xhr[country_name].location;
+                context.setmap(map_location);
+                L.marker(map_location).addTo(map);
+                $("#countries").html(format(xhr[country_name].zh_TW, country_name));
             });
-        }, 300);
-    }
-}
+            setTimeout(function () {
+                $.getJSON(data_url, function (xhr) {
+                    let data = [];
+                    let init = 50;
+                    let total = xhr[country_name].length;
+                    for (let i = init; i < total; i++) {
+                        data.push(xhr[country_name][i].confirmed);
+                    }
+                    $("#data-date").text("From " + xhr[country_name][init].date + " to " + xhr[country_name][total - 1].date);
+                    context.chart(Object.keys(data), data);
+                    context.chart2(xhr[country_name][total - 1]);
+                });
+            }, 300);
+        }
+    },
 
-$(function () {
-    locale("global");
-
-    function format(origin_name, country_name, confirmed, recovered, deaths) {
-        return "<tr><th scope=\"row\" onclick=\"locale('" + origin_name + "')\">" + country_name + "</th><td>" + confirmed + "</td><td>" + recovered + "</td><td>" + deaths + "</td></tr>";
-    }
-
-    function time() {
+    time: function () {
         function carry(i) {
             if (i < 10) {
                 i = "0" + i;
@@ -111,12 +108,15 @@ $(function () {
         let m = now.getMinutes();
         let s = now.getSeconds();
         return '最後重新整理：' + y + "-" + carry(M) + "-" + carry(d) + " " + carry(h) + ":" + carry(m) + ":" + carry(s);
-    }
+    },
 
-    function update() {
+    update: function () {
         $("#data").html("");
         $.getJSON(data_url, function (xhr) {
             $.getJSON(data2_url, function (country_names) {
+                format = function (origin_name, country_name, confirmed, recovered, deaths) {
+                    return "<tr><th scope=\"row\" onclick=\"context.locale('" + origin_name + "')\">" + country_name + "</th><td>" + confirmed + "</td><td>" + recovered + "</td><td>" + deaths + "</td></tr>";
+                };
                 let total = {
                     confirmed: 0,
                     recovered: 0,
@@ -136,9 +136,14 @@ $(function () {
                 $("#data2").html("<tr><td>" + total.confirmed + "</td><td>" + total.recovered + "</td><td>" + total.deaths + "</td></tr>");
             });
         });
-        $("#lastupdate").text(time());
+        $("#lastupdate").text(this.time());
     }
+}
 
-    update();
-    setInterval(update, 1800000);
+let context = new analysis();
+
+$(function () {
+    context.locale("global");
+    action = context.update();
+    setInterval(action, 1800000);
 });
