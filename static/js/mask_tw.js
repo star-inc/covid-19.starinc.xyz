@@ -76,9 +76,9 @@ mask.prototype = {
     },
 
     region_select: function () {
-        let layout = "<select id=\"cars\">";
+        let layout = "<select id=\"country-selections\">";
         this.countries.forEach(name => layout += "<option value=\"" + name + "\">" + name + "</option> ");
-        layout += "</select><canvas id=\"chart\" width=\"100%\" height=\"60px\"></canvas>";
+        layout += "</select><canvas id=\"chart\" width=\"100%\" h   eight=\"60px\"></canvas>";
         return layout;
     },
 
@@ -95,6 +95,9 @@ mask.prototype = {
             $("#data-status").html("請選擇您所在的地區 <a href=\"javascript:context.auto();\">自動選擇</a>");
             $("#data").html(self.region_select());
             self.chart(self.data.features.length);
+            $("#country-selections").click(function () {
+                console.log($("#country-selections").val());
+            });
         });
         $("#lastupdate").text(self.time());
     }
