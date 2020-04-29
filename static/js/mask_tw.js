@@ -6,7 +6,8 @@ const data_url = "https://raw.githubusercontent.com/kiang/pharmacies/master/json
 
 function mask() {
     this.map = L.map('map');
-    this.data = {}
+    this.data = {};
+    this.countries = [];
 }
 
 mask.prototype = {
@@ -74,27 +75,30 @@ mask.prototype = {
         return date.y + "-" + date.M + "-" + date.d + " " + date.h + ":" + date.m + ":" + date.s;
     },
 
+    region_select: function () {
+        let layout = "<select id=\"cars\">";
+        this.countries.forEach(name => layout += "<option value=\"" + name + "\">" + name + "</option> ");
+        layout += "</select><canvas id=\"chart\" width=\"100%\" height=\"60px\"></canvas>";
+        return layout;
+    },
+
     update: function () {
         let self = this;
         $("#data").html("");
         $.getJSON(data_url, function (xhr) {
-            format = function (origin_name, country_name) {
-                return "<h4>" + origin_name + "</h4>" +
-                    "<p>" + country_name + "</p>" +
-                    "<div class=\"data-container\">" +
-                    "<div id=\"data-date\"></div>" +
-                    "<canvas id=\"chart\" width=\"100%\" height=\"60px\"></canvas>" +
-                    "</div>" +
-                    "<p><a href=\"javascript:context.locale('global');\">返回</a></p>";
-            };
+            xhr.features.forEach(function (obj) {
+                if (!(self.countries.includes(obj.properties.county))) {
+                    self.countries.push(obj.properties.county);
+                }
+            });
             self.data = xhr;
             $("#data-status").html("請選擇您所在的地區 <a href=\"javascript:context.auto();\">自動選擇</a>");
-            $("#data").html(format(0, 0));
+            $("#data").html(self.region_select());
             self.chart(self.data.features.length);
         });
         $("#lastupdate").text(self.time());
     }
-}
+};
 
 let context = new mask();
 
