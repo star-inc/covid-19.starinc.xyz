@@ -6,45 +6,45 @@ const origin_container = $("#countries").clone();
 const data_url = "https://pomber.github.io/covid19/timeseries.json";
 const data2_url = "https://gist.githubusercontent.com/supersonictw/86038eb5cda33229d6367e4f7499e066/raw/8442d13be6e531eb82407fdb5d1124255655a3d2/countries.json";
 
-function analysis() {
-    this.map = L.map('map');
-    this.total = {
-        confirmed: 0,
-        recovered: 0,
-        deaths: 0,
-    };
-    this.data = {};
-    this.data2 = {};
-}
-
-analysis.prototype = {
-    setmap: function (location, level) {
-        this.map.setView(location, level);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '<a href="https://www.openstreetmap.org/">OSM</a>',
-            maxZoom: 18,
-        }).addTo(this.map);
-    },
-
-    total_reset: function () {
+class analysis {
+    constructor() {
+        this.map = L.map('map');
         this.total = {
             confirmed: 0,
             recovered: 0,
             deaths: 0,
         };
-    },
+        this.data = {};
+        this.data2 = {};
+    }
 
-    total_add: function (data) {
+    setmap(location, level) {
+        this.map.setView(location, level);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '<a href="https://www.openstreetmap.org/">OSM</a>',
+            maxZoom: 18,
+        }).addTo(this.map);
+    }
+
+    total_reset() {
+        this.total = {
+            confirmed: 0,
+            recovered: 0,
+            deaths: 0,
+        };
+    }
+
+    total_add(data) {
         this.total.confirmed += data.confirmed;
         this.total.recovered += data.recovered;
         this.total.deaths += data.deaths;
-    },
+    }
 
-    data_info: function (data) {
+    data_info(data) {
         return [(data.confirmed - data.recovered - data.deaths), data.recovered, data.deaths];
-    },
+    }
 
-    chart: function (labels, data) {
+    chart(labels, data) {
         let ctx = document.getElementById('chart').getContext('2d');
         new Chart(ctx, {
             type: 'line',
@@ -57,9 +57,9 @@ analysis.prototype = {
                 }]
             }
         });
-    },
+    }
 
-    chart2: function (data) {
+    chart2(data) {
         let info = this.data_info(data);
         let ctx = document.getElementById('chart2').getContext('2d');
         new Chart(ctx, {
@@ -82,9 +82,9 @@ analysis.prototype = {
                 }]
             }
         });
-    },
+    }
 
-    chart3: function (data) {
+    chart3(data) {
         let info = this.data_info(data);
         let ctx = document.getElementById('chart3').getContext('2d');
         new Chart(ctx, {
@@ -107,9 +107,9 @@ analysis.prototype = {
                 }]
             }
         });
-    },
+    }
 
-    locale: function (country_name) {
+    locale(country_name) {
         this.map.eachLayer(layer => this.map.removeLayer(layer));
         if (country_name === "global") {
             this.setmap(init_location, 3);
@@ -147,17 +147,17 @@ analysis.prototype = {
                 draw_chart(50, country_name);
             }, 100);
         }
-    },
+    }
 
-    time: function () {
-        let carry = function (date, unit) {
+    time() {
+        function carry(date, unit) {
             unit.forEach(function (node) {
                 if (date[node] < 10) {
                     date[node] = "0" + date[node];
                 }
             });
-        };
-        now = new Date();
+        }
+        let now = new Date();
         let date = {
             y: now.getFullYear(),
             M: now.getMonth() + 1,
@@ -168,9 +168,11 @@ analysis.prototype = {
         };
         carry(date, ["M", "d", "h", "m", "s"]);
         return date.y + "-" + date.M + "-" + date.d + " " + date.h + ":" + date.m + ":" + date.s;
-    },
+    }
 
-    display: function () {
+    display() {
+        this.total_reset();
+        $("#countries-data").html("");
         let format = function (origin_name, country_name, item) {
             return "<tr>" +
                 "<th scope=\"row\" onclick=\"context.locale('" + origin_name + "')\">" + country_name + "</th>" +
@@ -189,11 +191,9 @@ analysis.prototype = {
         $("#worldwide-data").html("<tr><td>" + this.total.confirmed + "</td><td>" + this.total.recovered + "</td><td>" + this.total.deaths + "</td></tr>");
         this.chart3(this.total);
         $("#lastupdate").text(this.time());
-    },
+    }
 
-    update: async function () {
-        this.total_reset();
-        $("#countries-data").html("");
+    async update() {
         let download = async function (url) {
             return new Promise(function (action) {
                 $.getJSON(url, action);
@@ -203,7 +203,7 @@ analysis.prototype = {
         this.data2 = await download(data2_url);
         this.display();
     }
-};
+}
 
 let context = new analysis();
 
