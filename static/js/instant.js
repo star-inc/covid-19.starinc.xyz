@@ -110,12 +110,9 @@ analysis.prototype = {
     },
 
     locale: function (country_name) {
-        let self = this;
-        self.map.eachLayer(function (layer) {
-            self.map.removeLayer(layer);
-        });
+        this.map.eachLayer(layer => this.map.removeLayer(layer));
         if (country_name === "global") {
-            self.setmap(init_location, 3);
+            this.setmap(init_location, 3);
             $("#countries").html(origin_container);
         } else {
             let format = function (origin_name, country_name) {
@@ -128,6 +125,7 @@ analysis.prototype = {
                     "</div>" +
                     "<p><a href=\"javascript:context.locale('global');\">返回</a></p>";
             };
+            let self = this;
             let draw_map = function (target) {
                 let map_location = self.data2[target].location;
                 self.setmap(map_location, 5);
@@ -205,7 +203,7 @@ analysis.prototype = {
         this.data2 = await download(data2_url);
         this.display();
     }
-}
+};
 
 let context = new analysis();
 
