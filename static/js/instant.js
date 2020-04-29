@@ -18,8 +18,8 @@ function analysis() {
 }
 
 analysis.prototype = {
-    setmap: function (location) {
-        this.map.setView(location, 3);
+    setmap: function (location, level) {
+        this.map.setView(location, level);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '<a href="https://www.openstreetmap.org/">OSM</a>',
             maxZoom: 18,
@@ -67,7 +67,7 @@ analysis.prototype = {
             data: {
                 labels: ["treating", "recovered", "deaths"],
                 datasets: [{
-                    label: 'num of Cases',
+                    label: 'numbers of Cases',
                     data: info,
                     borderColor: [
                         'rgba(220, 0, 130, 0.5)',
@@ -86,13 +86,13 @@ analysis.prototype = {
 
     chart3: function (data) {
         let info = this.data_info(data);
-        let ctx = document.getElementById('data2-chart').getContext('2d');
+        let ctx = document.getElementById('chart3').getContext('2d');
         new Chart(ctx, {
             type: 'polarArea',
             data: {
                 labels: ["treating", "recovered", "deaths"],
                 datasets: [{
-                    label: 'num of Cases',
+                    label: 'numbers of Cases',
                     data: info,
                     borderColor: [
                         'rgba(220, 0, 15, 0.7)',
@@ -115,7 +115,7 @@ analysis.prototype = {
             self.map.removeLayer(layer);
         });
         if (country_name === "global") {
-            self.setmap(init_location);
+            self.setmap(init_location, 3);
             $("#countries").html(origin_container);
         } else {
             format = function (origin_name, country_name) {
@@ -130,7 +130,7 @@ analysis.prototype = {
             };
             draw_map = function (target) {
                 let map_location = self.data2[target].location;
-                self.setmap(map_location);
+                self.setmap(map_location, 5);
                 L.marker(map_location).addTo(self.map);
                 $("#countries").html(format(self.data2[target].zh_TW, target));
             };
@@ -169,14 +169,13 @@ analysis.prototype = {
             s: now.getSeconds(),
         };
         carry(date, ["M", "d", "h", "m", "s"]);
-        return '最後重新整理：' +
-            date.y + "-" + date.M + "-" + date.d + " " + date.h + ":" + date.m + ":" + date.s;
+        return date.y + "-" + date.M + "-" + date.d + " " + date.h + ":" + date.m + ":" + date.s;
     },
 
     update: function () {
         let self = this;
         self.total_reset();
-        $("#data").html("");
+        $("#countries-data").html("");
         $.getJSON(data_url, function (xhr) {
             $.getJSON(data2_url, function (country_names) {
                 format = function (origin_name, country_name, confirmed, recovered, deaths) {
@@ -188,15 +187,15 @@ analysis.prototype = {
                 Object.keys(xhr).forEach(function (e) {
                     let latest = xhr[e].length - 1;
                     if (country_names[e].hasOwnProperty("zh_TW")) {
-                        $("#data").append(format(e, country_names[e].zh_TW, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
+                        $("#countries-data").append(format(e, country_names[e].zh_TW, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
                     } else {
-                        $("#data").append(format(e, e, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
+                        $("#countries-data").append(format(e, e, xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths));
                     }
                     self.total_add(xhr[e][latest].confirmed, xhr[e][latest].recovered, xhr[e][latest].deaths);
                 });
                 self.data = xhr;
                 self.data2 = country_names;
-                $("#data2").html("<tr><td>" + self.total.confirmed + "</td><td>" + self.total.recovered + "</td><td>" + self.total.deaths + "</td></tr>");
+                $("#worldwide-data").html("<tr><td>" + self.total.confirmed + "</td><td>" + self.total.recovered + "</td><td>" + self.total.deaths + "</td></tr>");
                 self.chart3(self.total);
             });
         });

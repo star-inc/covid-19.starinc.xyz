@@ -44,10 +44,10 @@
                 </div>
                 <div id="region" class="col text-center light">
                     <h4>地區選擇器</h4>
-                    <p>請選擇您所在的地區 <a href="javascript:auto();">自動選擇</a></p>
-                    <div class="data-container">
+                    <p><span id="data-status">載入中...</span></p>
+                    <div id="data" class="data-container">
                     </div>
-                    <span id="lastupdate"></span>
+                    最後重新整理：<span id="lastupdate">Unknown</span>
                 </div>
             </div>
         </div>
@@ -59,4 +59,5 @@
     crossorigin=""></script>
 <script src="https://cdn.starinc.xyz/static/public_assets/jquery/3.4.1/jquery.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-<script src="/js/maskmap_tw.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="/js/mask_tw.js"></script>

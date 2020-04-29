@@ -27,7 +27,7 @@
             position: relative;
         }
 
-        #countries {
+        .minor-container {
             margin: 10px 0 auto;
         }
     }
@@ -42,7 +42,7 @@
                     <p>希望，在何方？</p>
                     <div id="map"></div>
                 </div>
-                <div id="countries" class="col text-center light">
+                <div id="countries" class="minor-container col text-center light">
                     <h4>地區/國家統計</h4>
                     <p>點擊名稱可顯示分析資料</p>
                     <div class="data-container">
@@ -55,12 +55,12 @@
                                     <th scope="col">死亡</th>
                                 </tr>
                             </thead>
-                            <tbody id="data">
+                            <tbody id="countries-data">
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div id="countries" class="col text-center light">
+                <div class="minor-container col text-center light">
                     <h4>全球統計</h4>
                     <p>COVID-19 確診人數</p>
                     <div class="data-container">
@@ -72,19 +72,17 @@
                                     <th scope="col">死亡</th>
                                 </tr>
                             </thead>
-                            <tbody id="data2">
+                            <tbody id="worldwide-data">
                             </tbody>
                         </table>
-                        <div id="data2-date"></div>
-                        <canvas id="data2-chart" width="100%" height="60px"></canvas>
+                        <canvas id="chart3" width="100%" height="60px"></canvas>
                     </div>
                     <p>
-                        <span id="lastupdate"></span>
+                        最後重新整理：<span id="lastupdate">Unknown</span>
                     </p>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </section>
 
