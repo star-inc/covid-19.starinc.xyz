@@ -34,14 +34,12 @@ class mask {
                     label: 'numbers of Cases',
                     data: info,
                     borderColor: [
-                        'rgba(220, 0, 130, 0.5)',
-                        'rgba(15, 205, 25, 0.5)',
-                        'rgba(0, 0, 0, 0.5)'
+                        'rgba(30, 120, 130, 0.5)',
+                        'rgba(10, 21, 125, 0.5)'
                     ],
                     backgroundColor: [
-                        'rgba(220, 0, 130, 0.5)',
-                        'rgba(15, 205, 25, 0.5)',
-                        'rgba(0, 0, 0, 0.5)'
+                        'rgba(30, 120, 130, 0.5)',
+                        'rgba(10, 21, 125, 0.5)'
                     ]
                 }]
             }
