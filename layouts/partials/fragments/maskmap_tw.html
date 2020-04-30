@@ -22,12 +22,20 @@
         overflow: auto;
     }
 
+    .inside-data-container {
+        margin: 15px auto;
+    }
+
+    #actions .data-container {
+        height: 550px;
+    }
+
     @media screen and (max-width: 985px) {
         .auto-arrange {
             position: relative;
         }
 
-        #region {
+        #actions {
             margin: 10px 0 auto;
         }
     }
@@ -42,12 +50,18 @@
                     <p>我的口罩，別跑！！！</p>
                     <div id="map"></div>
                 </div>
-                <div id="region" class="col text-center light">
-                    <h4>地區選擇器</h4>
-                    <p><span id="data-status">載入中...</span></p>
-                    <div id="data" class="data-container">
+                <div id="actions" class="col text-center light">
+                    <h5>全國統計</h5>
+                    <div class="data-container">
+                        <p><span id="available-status">載入中...</span></p>
+                        <div id="data1" class="inside-data-container">載入中...</div>
+                        <h5>地區選擇器</h5>
+                        <div id="data2" class="inside-data-container">
+                        </div>
                     </div>
-                    最後重新整理：<span id="lastupdate">Unknown</span>
+                    <p>
+                        最後重新整理：<span id="lastupdate">Unknown</span>
+                    </p>
                 </div>
             </div>
         </div>

@@ -8,6 +8,10 @@ class mask {
     constructor() {
         this.map = L.map('map');
         this.data = {};
+        this.available_num = {
+            mask_adult: 0,
+            mask_child: 0
+        };
         this.countries = [];
     }
 
@@ -19,13 +23,13 @@ class mask {
         }).addTo(this.map);
     }
 
-    chart(data) {
-        let info = [data, 100, 100];
+    chart() {
+        let info = [this.available_num.mask_child, this.available_num.mask_adult];
         let ctx = document.getElementById('chart').getContext('2d');
         new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ["treating", "recovered", "deaths"],
+                labels: ["child", "adult"],
                 datasets: [{
                     label: 'numbers of Cases',
                     data: info,
@@ -48,17 +52,19 @@ class mask {
         this.map.eachLayer(layer => this.map.removeLayer(layer));
         if (latitude === null && longitude === null) {
             this.setmap(init_location, 7);
+        } else {
+            this.setmap([latitude, longitude], 7);
         }
     }
 
     time() {
-        function carry(date, unit) {
+        let carry = function (date, unit) {
             unit.forEach(function (node) {
                 if (date[node] < 10) {
                     date[node] = "0" + date[node];
                 }
             });
-        }
+        };
         let now = new Date();
         let date = {
             y: now.getFullYear(),
@@ -73,26 +79,50 @@ class mask {
     }
 
     region_select() {
-        let layout = "<select id=\"country-selections\">";
+        let layout = "請選擇您所在的地區 <a href=\"javascript:context.auto();\">自動選擇</a>";
+        layout += "<p><select id=\"county-selections\" class=\"inside-data-container\">";
         this.countries.forEach(name => layout += "<option value=\"" + name + "\">" + name + "</option> ");
-        layout += "</select><canvas id=\"chart\" width=\"100%\" h   eight=\"60px\"></canvas>";
+        layout += "</p></select>";
         return layout;
     }
 
-    handle() {
-        for (let obj in this.data.features) {
-            if (!this.countries.includes(this.data.features[obj].properties.county)) {
-                this.countries.push(this.data.features[obj].properties.county);
+    analysis() {
+        return "<canvas id=\"chart\" width=\"100%\" height=\"60px\"></canvas>";
+    }
+
+    available_status() {
+        let mask_child = this.available_num.mask_child;
+        let mask_adult = this.available_num.mask_adult;
+        return "兒童：" + mask_child + "個；成人：" + mask_adult + "個 可供購買";
+    }
+
+    handle_data() {
+        for (let index in this.data.features) {
+            if (!this.countries.includes(this.data.features[index].properties.county)) {
+                this.countries.push(this.data.features[index].properties.county);
+                this.available_num.mask_adult += this.data.features[index].properties.mask_adult;
+                this.available_num.mask_child += this.data.features[index].properties.mask_child;
+            }
+        }
+    }
+
+    mark_masks_by_region(region) {
+        this.locale(23.5, 121);
+        for (let index in this.data.features) {
+            if (region === this.data.features[index].properties.county) {
+                L.geoJSON(this.data.features[index]).addTo(this.map);
             }
         }
     }
 
     display() {
-        $("#data-status").html("請選擇您所在的地區 <a href=\"javascript:context.auto();\">自動選擇</a>");
-        $("#data").html(this.region_select());
-        this.chart(this.data.features.length);
-        $("#country-selections").click(function () {
-            console.log($("#country-selections").val());
+        $("#data1").html(this.analysis());
+        $("#data2").html(this.region_select());
+        $("#available-status").html(this.available_status());
+        this.chart();
+        let self = this;
+        $("#county-selections").click(function () {
+            self.mark_masks_by_region($("#county-selections").val());
         });
         $("#lastupdate").text(this.time());
     }
@@ -104,7 +134,7 @@ class mask {
             });
         };
         this.data = await download(data_url);
-        this.handle()
+        this.handle_data();
         this.display();
     }
 }

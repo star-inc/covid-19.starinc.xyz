@@ -150,13 +150,13 @@ class analysis {
     }
 
     time() {
-        function carry(date, unit) {
+        let carry = function (date, unit) {
             unit.forEach(function (node) {
                 if (date[node] < 10) {
                     date[node] = "0" + date[node];
                 }
             });
-        }
+        };
         let now = new Date();
         let date = {
             y: now.getFullYear(),
