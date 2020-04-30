@@ -65,7 +65,7 @@ class analysis {
         new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ["確診", "康復", "死亡"],
+                labels: ["治療中", "康復", "死亡"],
                 datasets: [{
                     label: '例',
                     data: info,
@@ -90,7 +90,7 @@ class analysis {
         new Chart(ctx, {
             type: 'polarArea',
             data: {
-                labels: ["確診", "康復", "死亡"],
+                labels: ["治療中", "康復", "死亡"],
                 datasets: [{
                     label: '例',
                     data: info,
