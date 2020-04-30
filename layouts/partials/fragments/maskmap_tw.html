@@ -26,10 +26,6 @@
         margin: 15px auto;
     }
 
-    #actions .data-container {
-        height: 550px;
-    }
-
     @media screen and (max-width: 985px) {
         .auto-arrange {
             position: relative;
@@ -51,13 +47,12 @@
                     <div id="map"></div>
                 </div>
                 <div id="actions" class="col text-center light">
-                    <h5>全國統計</h5>
+                    <h4>全國統計</h4>
+                    <p><span id="available-status">載入中...</span></p>
                     <div class="data-container">
-                        <p><span id="available-status">載入中...</span></p>
                         <div id="data1" class="inside-data-container">載入中...</div>
                         <h5>地區選擇器</h5>
-                        <div id="data2" class="inside-data-container">
-                        </div>
+                        <div id="data2" class="inside-data-container">載入中...</div>
                     </div>
                     <p>
                         最後重新整理：<span id="lastupdate">Unknown</span>

@@ -51,7 +51,7 @@ class analysis {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: '# of Cases',
+                    label: '# 例',
                     data: data,
                     borderColor: 'rgba(65, 133, 255, 0.5)'
                 }]
@@ -65,9 +65,9 @@ class analysis {
         new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ["treating", "recovered", "deaths"],
+                labels: ["確診", "康復", "死亡"],
                 datasets: [{
-                    label: 'numbers of Cases',
+                    label: '例',
                     data: info,
                     borderColor: [
                         'rgba(220, 0, 130, 0.5)',
@@ -90,9 +90,9 @@ class analysis {
         new Chart(ctx, {
             type: 'polarArea',
             data: {
-                labels: ["treating", "recovered", "deaths"],
+                labels: ["確診", "康復", "死亡"],
                 datasets: [{
-                    label: 'numbers of Cases',
+                    label: '例',
                     data: info,
                     borderColor: [
                         'rgba(220, 0, 15, 0.7)',
