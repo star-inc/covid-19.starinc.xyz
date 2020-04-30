@@ -24,9 +24,16 @@ class mask {
     }
 
     auto() {
+        let self = this;
         this.map.locate({
             setView: true,
             watch: true
+        });
+        this.map.on('locationfound', function (e) {
+            L.marker(e.latlng).addTo(self.map);
+        });
+        this.map.on('locationerror', function (e) {
+            console.warn(e);
         });
     }
 
