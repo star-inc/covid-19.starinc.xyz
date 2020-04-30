@@ -24,22 +24,10 @@ class mask {
     }
 
     auto() {
-        let self = this;
-        let options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-        };
-
-        let id = navigator.geolocation.watchPosition(
-            function (pos) {
-                let location = [pos.coords.latitude, pos.coords.longitude];
-                self.setmap(location, 13);
-                navigator.geolocation.clearWatch(id);
-            },
-            function (err) {
-                console.warn("error(" + err.code + "): " + err.message);
-            }, options);
+        this.map.locate({
+            setView: true,
+            watch: true
+        });
     }
 
     chart() {
