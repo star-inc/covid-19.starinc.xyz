@@ -123,7 +123,7 @@ class analysis {
             $("#countries").html(origin_container);
         } else {
             let format = function (country_name, origin_name) {
-                if (country_name === undefined) {
+                if (country_name === "Unknown") {
                     self.notify("該地區中文名稱尚未收錄。");
                 }
                 return "<h4>" + country_name + "</h4>" +
