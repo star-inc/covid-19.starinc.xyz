@@ -153,7 +153,7 @@ class analysis {
                 self.chart2(self.data[target][total - 1]);
             };
             setTimeout(function () {
-                if (self.data2[origin_name].hasOwnProperty("location")) {
+                if (self.data2.hasOwnProperty(origin_name) && self.data2[origin_name].hasOwnProperty("location")) {
                     draw_map(origin_name);
                 } else {
                     self.notify("該地區座標尚未收錄。");
