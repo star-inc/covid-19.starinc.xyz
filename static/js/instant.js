@@ -139,7 +139,9 @@ class analysis {
             let draw_map = function (target) {
                 let country_name = "Unknown";
                 if (self.data2.hasOwnProperty(target) && self.data2[target].hasOwnProperty("location")) {
-                    country_name = self.data2[target].zh_TW;
+                    if (self.data2[target].hasOwnProperty("zh_TW")) {
+                        country_name = self.data2[target].zh_TW;
+                    }
                     let map_location = self.data2[target].location;
                     self.setmap(map_location, 5);
                     L.marker(map_location).addTo(self.map);
