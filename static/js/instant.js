@@ -26,6 +26,13 @@ class analysis {
         }).addTo(this.map);
     }
 
+    notify(msg) {
+        new jBox("提醒", {
+            content: msg,
+            color: "blue"
+        });
+    }
+
     total_reset() {
         this.total = {
             confirmed: 0,
@@ -109,15 +116,18 @@ class analysis {
         });
     }
 
-    locale(country_name) {
+    locale(origin_name) {
         this.map.eachLayer(layer => this.map.removeLayer(layer));
-        if (country_name === "global") {
+        if (origin_name === "global") {
             this.setmap(init_location, 3);
             $("#countries").html(origin_container);
         } else {
-            let format = function (origin_name, country_name) {
-                return "<h4>" + origin_name + "</h4>" +
-                    "<p>" + country_name + "</p>" +
+            let format = function (country_name, origin_name) {
+                if (country_name === undefined) {
+                    self.notify("該地區中文名稱尚未收錄。");
+                }
+                return "<h4>" + country_name + "</h4>" +
+                    "<p>" + origin_name + "</p>" +
                     "<div class=\"data-container\">" +
                     "<div id=\"data-date\"></div>" +
                     "<canvas id=\"chart\" width=\"100%\" height=\"60px\"></canvas>" +
@@ -143,8 +153,12 @@ class analysis {
                 self.chart2(self.data[target][total - 1]);
             };
             setTimeout(function () {
-                draw_map(country_name);
-                draw_chart(50, country_name);
+                if (self.data2[origin_name].hasOwnProperty("location")) {
+                    draw_map(origin_name);
+                } else {
+                    self.notify("該地區座標尚未收錄。");
+                }
+                draw_chart(50, origin_name);
             }, 100);
         }
     }
