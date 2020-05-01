@@ -27,7 +27,7 @@ class analysis {
     }
 
     notify(msg) {
-        new jBox("提醒", {
+        new jBox("Notice", {
             content: msg,
             color: "blue"
         });
