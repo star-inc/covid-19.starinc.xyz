@@ -123,7 +123,7 @@ class analysis {
             $("#countries").html(origin_container);
         } else {
             let format = function (country_name, origin_name) {
-                if (country_name === "Unknown") {
+                if (country_name === "尚未收錄") {
                     self.notify("該地區中文名稱尚未收錄。");
                 }
                 return "<h4>" + country_name + "</h4>" +
@@ -137,7 +137,7 @@ class analysis {
             };
             let self = this;
             let draw_map = function (target) {
-                let country_name = "Unknown";
+                let country_name = "尚未收錄";
                 if (self.data2.hasOwnProperty(target) && self.data2[target].hasOwnProperty("location")) {
                     if (self.data2[target].hasOwnProperty("zh_TW")) {
                         country_name = self.data2[target].zh_TW;

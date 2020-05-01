@@ -43,9 +43,9 @@ class mask {
         new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ["child", "adult"],
+                labels: ["兒童", "成人"],
                 datasets: [{
-                    label: 'numbers of Cases',
+                    label: '個數',
                     data: info,
                     borderColor: [
                         'rgba(30, 120, 130, 0.5)',
