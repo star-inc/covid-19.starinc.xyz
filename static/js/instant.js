@@ -181,7 +181,7 @@ class analysis {
         };
         for (let country in this.data) {
             let latest = this.data[country].length - 1;
-            if (this.data2[country].hasOwnProperty("zh_TW")) {
+            if (this.data2.hasOwnProperty(country) && this.data2[country].hasOwnProperty("zh_TW")) {
                 $("#countries-data").append(format(country, this.data2[country].zh_TW, this.data[country][latest]));
             } else {
                 $("#countries-data").append(format(country, country, this.data[country][latest]));
