@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "style.css",
-	"sourceRoot": "/home/runner/work/covid-19/covid-19",
+	"sourceRoot": "/home/runner/work/covid-19.starinc.xyz/covid-19.starinc.xyz",
 	"sources": [
 		"themes/syna/assets/styles/index.scss",
 		"themes/syna/assets/styles/fontawesome/fontawesome.scss",
